@@ -10,9 +10,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "categoria")
 @SequenceGenerator(
-		name=Categoria.CATEGORIA_SEQUENCE,
-		sequenceName = Categoria.CATEGORIA_SEQUENCE, allocationSize = 1
-		)
+		name = Categoria.CATEGORIA_SEQUENCE,
+		sequenceName = Categoria.CATEGORIA_SEQUENCE, allocationSize = 1)
 public class Categoria {
 	
 	public static final String CATEGORIA_SEQUENCE = "categoria_sequence";
