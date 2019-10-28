@@ -1,0 +1,21 @@
+CREATE SEQUENCE IF NOT EXISTS pessoa_sequence;
+
+CREATE TABLE pessoa (
+	
+	codigo INT8 NOT NULL,
+	nome VARCHAR(30) NOT NULL,
+	ativo BOOLEAN NOT NULL,
+	
+	cidade VARCHAR(30) DEFAULT NULL,
+	estado VARCHAR(30) DEFAULT NULL,
+	cep VARCHAR(10) DEFAULT NULL,
+	bairro VARCHAR(30) DEFAULT NULL,
+	logradouro VARCHAR(30) DEFAULT NULL,
+	complemento VARCHAR(30) DEFAULT NULL,
+	numero INT4 DEFAULT NULL,
+	
+	CONSTRAINT pk_pessoa PRIMARY KEY (codigo)
+	
+);
+
+ALTER TABLE pessoa ALTER COLUMN codigo SET DEFAULT NEXTVAL('pessoa_sequence');
