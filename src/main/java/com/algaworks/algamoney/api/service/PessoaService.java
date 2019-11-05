@@ -19,7 +19,7 @@ public class PessoaService {
 		BeanUtils.copyProperties(pessoa, pessoaSalva, "codigo");
 		return pessoaRepository.save(pessoaSalva);
 	}
-
+	
 	public void atualizarPropriedadeAtivo(Long codigo, Boolean ativo) {
 		Pessoa pessoaSalva = buscarPeloCodigo(codigo);
 		pessoaSalva.setAtivo(ativo);
