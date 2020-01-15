@@ -41,7 +41,7 @@ public class Lancamento {
 	
 	@NotNull
 	private BigDecimal valor;
-
+	
 	private String observacao;
 	
 	@NotNull
