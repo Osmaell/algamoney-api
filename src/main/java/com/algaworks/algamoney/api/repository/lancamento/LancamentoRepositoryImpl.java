@@ -18,6 +18,7 @@ import org.springframework.util.StringUtils;
 
 import com.algaworks.algamoney.api.model.Lancamento;
 import com.algaworks.algamoney.api.repository.filter.LancamentoFilter;
+import com.algaworks.algamoney.api.repository.projection.ResumoLancamento;
 	
 public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
 	
@@ -43,6 +44,31 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
 		return new PageImpl<>(query.getResultList(), pageable, total(lancamentoFilter));
 	}
 
+	@Override
+	public Page<ResumoLancamento> resumir(LancamentoFilter lancamentoFilter, Pageable pageable) {
+		
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<ResumoLancamento> criteria = builder.createQuery(ResumoLancamento.class);
+		Root<Lancamento> root = criteria.from(Lancamento.class);
+		
+		criteria.select( 
+				builder.construct(ResumoLancamento.class, 
+				root.get("codigo"), root.get("descricao"),
+				root.get("dataVencimento"), root.get("dataPagamento"),
+				root.get("valor"), root.get("tipo"),
+				root.get("categoria").get("nome"),
+				root.get("pessoa").get("nome")) );
+		
+		// criando restrições
+		Predicate[] predicates = criarRestricoes(lancamentoFilter, builder, root);
+		criteria.where(predicates);
+		
+		TypedQuery<ResumoLancamento> query = manager.createQuery(criteria);
+		adicionarRestricoesParaPaginacao(query, pageable);
+		
+		return new PageImpl<>(query.getResultList(), pageable, total(lancamentoFilter));
+	}
+	
 	private Predicate[] criarRestricoes(LancamentoFilter lancamentoFilter, CriteriaBuilder builder, Root<Lancamento> root) {
 		
 		List<Predicate> predicates = new ArrayList<>();
@@ -63,7 +89,7 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
 		return predicates.toArray(new Predicate[predicates.size()]);
 	}
 	
-	private void adicionarRestricoesParaPaginacao(TypedQuery<Lancamento> query, Pageable pageable) {
+	private void adicionarRestricoesParaPaginacao(TypedQuery<?> query, Pageable pageable) {
 		int paginaAtual = pageable.getPageNumber();
 		int totalRegistrosPorPagina = pageable.getPageSize();
 		int primeiroRegistro = paginaAtual * totalRegistrosPorPagina;
