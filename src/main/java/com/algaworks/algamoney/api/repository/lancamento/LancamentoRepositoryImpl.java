@@ -1,5 +1,6 @@
 package com.algaworks.algamoney.api.repository.lancamento;
 	
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
+import com.algaworks.algamoney.api.dto.LancamentoEstatisticaCategoria;
 import com.algaworks.algamoney.api.model.Lancamento;
 import com.algaworks.algamoney.api.repository.filter.LancamentoFilter;
 import com.algaworks.algamoney.api.repository.projection.ResumoLancamento;
@@ -69,6 +71,36 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
 		return new PageImpl<>(query.getResultList(), pageable, total(lancamentoFilter));
 	}
 	
+	@Override
+	public List<LancamentoEstatisticaCategoria> porCategoria(LocalDate mesReferencia) {
+		
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<LancamentoEstatisticaCategoria> criteria = builder.createQuery(LancamentoEstatisticaCategoria.class);
+		Root<Lancamento> root = criteria.from(Lancamento.class);
+		
+		CriteriaQuery<LancamentoEstatisticaCategoria> teste = criteria.select( builder.construct(LancamentoEstatisticaCategoria.class,
+				root.get("categoria"),
+				builder.sum(root.get("valor")) ) );
+		
+		LocalDate primeiroDia = mesReferencia.withDayOfMonth(1);
+		LocalDate ultimoDia = mesReferencia.withDayOfMonth( mesReferencia.lengthOfMonth() );
+		
+		criteria.where( 
+				builder.greaterThanOrEqualTo( root.get("dataVencimento") , primeiroDia),
+				builder.lessThanOrEqualTo( root.get("dataVencimento"), ultimoDia));
+		
+		criteria.groupBy( root.get("categoria") );
+		
+		TypedQuery<LancamentoEstatisticaCategoria> query = manager.createQuery(criteria);
+		
+		query.getResultList().forEach(element -> {
+			System.out.println(element.getCategoria().getNome() + " - " + element.getTotal());
+			System.out.println("\n");
+		});
+		
+		return query.getResultList();
+	}
+	
 	private Predicate[] criarRestricoes(LancamentoFilter lancamentoFilter, CriteriaBuilder builder, Root<Lancamento> root) {
 		
 		List<Predicate> predicates = new ArrayList<>();
@@ -111,5 +143,6 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
 		
 		return manager.createQuery(criteria).getSingleResult();
 	}
+
 	
 }
