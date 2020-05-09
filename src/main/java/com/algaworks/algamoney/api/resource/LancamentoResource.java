@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algamoney.api.dto.LancamentoEstatisticaCategoria;
+import com.algaworks.algamoney.api.dto.LancamentoEstatisticaDia;
 import com.algaworks.algamoney.api.event.RecursoCriadoEvent;
 import com.algaworks.algamoney.api.exceptionhandler.AlgamoneyExceptionHandler.Erro;
 import com.algaworks.algamoney.api.model.Lancamento;
@@ -64,12 +65,6 @@ public class LancamentoResource {
 		return lancamentoRepository.resumir(lancamentoFilter, pageable);
 	}
 	
-	@GetMapping("/estatisticas/por-categoria")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
-	public List<LancamentoEstatisticaCategoria> porCategoria() {
-		return lancamentoRepository.porCategoria(LocalDate.now());
-	}
-	
 	@GetMapping("/{codigo}")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
 	public ResponseEntity<?> buscarPeloCodigo( @PathVariable Long codigo) {
@@ -90,6 +85,18 @@ public class LancamentoResource {
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void deletar( @PathVariable Long codigo ) {
 		lancamentoRepository.delete(codigo);
+	}
+	
+	@GetMapping("/estatisticas/por-categoria")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	public List<LancamentoEstatisticaCategoria> porCategoria() {
+		return lancamentoRepository.porCategoria(LocalDate.now());
+	}
+	
+	@GetMapping("/estatisticas/por-dia")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	public List<LancamentoEstatisticaDia> porDia() {
+		return lancamentoRepository.porDia(LocalDate.now());
 	}
 	
 	@ExceptionHandler(PessoaInexistenteOuInativaException.class)

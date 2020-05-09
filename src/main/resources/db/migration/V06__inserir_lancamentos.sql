@@ -12,4 +12,4 @@ INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, obser
 INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) values ('Eletrônicos', '2017-04-10', '2017-04-10', 2100.32, null, 'DESPESA', 5, 4);
 INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) values ('Instrumentos', '2020-05-8', null, 1040.32, null, 'DESPESA', 4, 3);
 INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) values ('Café', '2020-05-10', '2017-04-10', 4.32, null, 'DESPESA', 4, 2);
-INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) values ('Lanche', '2020-05-18', null, 10.20, null, 'DESPESA', 4, 1);
+INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) values ('Lanche', '2020-05-10', null, 10.20, null, 'DESPESA', 4, 1);
