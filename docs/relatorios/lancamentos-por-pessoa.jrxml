@@ -131,11 +131,11 @@
 				<textFieldExpression><![CDATA[$F{pessoa}.getNome()]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤#,##0.00;¤-#,##0.00">
-				<reportElement x="495" y="1" width="55" height="23" uuid="173fcf2d-f9c6-46f5-926c-ff3b20f9408f">
+				<reportElement x="481" y="1" width="69" height="23" uuid="173fcf2d-f9c6-46f5-926c-ff3b20f9408f">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
 			</textField>
 		</band>
