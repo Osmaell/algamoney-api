@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -93,6 +94,7 @@ public class LancamentoResource {
 		lancamentoRepository.delete(codigo);
 	}
 	
+<<<<<<< HEAD
 	@GetMapping("/estatisticas/por-categoria")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
 	public List<LancamentoEstatisticaCategoria> porCategoria() {
@@ -114,6 +116,18 @@ public class LancamentoResource {
 		byte[] relatorio = lancamentoService.relatorioPorPessoa(inicio, fim);
 		
 		return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE).body(relatorio);
+=======
+	@PutMapping("/{codigo}")
+	public ResponseEntity<Lancamento> atualizar( @PathVariable Long codigo, Lancamento lancamento ) {
+		
+		try {
+			Lancamento lancamentoSalvo = lancamentoService.atualizar(codigo, lancamento);
+			return ResponseEntity.ok(lancamentoSalvo);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.notFound().build();
+		}
+		
+>>>>>>> 1cb358e469add51ff818381a5a6b5f51a72508c7
 	}
 	
 	@ExceptionHandler(PessoaInexistenteOuInativaException.class)

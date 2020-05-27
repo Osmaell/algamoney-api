@@ -14,5 +14,4 @@ public interface LancamentoRepository extends JpaRepository<Lancamento, Long>, L
 	
 	List<Lancamento> findByDataVencimentoLessThanEqualAndDataPagamentoIsNull(LocalDate data);
 	
-	
 }
