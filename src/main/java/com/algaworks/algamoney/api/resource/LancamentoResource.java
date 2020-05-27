@@ -94,32 +94,9 @@ public class LancamentoResource {
 		lancamentoRepository.delete(codigo);
 	}
 	
-<<<<<<< HEAD
-	@GetMapping("/estatisticas/por-categoria")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
-	public List<LancamentoEstatisticaCategoria> porCategoria() {
-		return lancamentoRepository.porCategoria(LocalDate.now());
-	}
-	
-	@GetMapping("/estatisticas/por-dia")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
-	public List<LancamentoEstatisticaDia> porDia() {
-		return lancamentoRepository.porDia(LocalDate.now());
-	}
-	
-	@GetMapping("/relatorios/por-pessoa")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
-	public ResponseEntity<byte[]> relatorioPorPessoa(
-			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate inicio,
-			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate fim) throws JRException {
-		
-		byte[] relatorio = lancamentoService.relatorioPorPessoa(inicio, fim);
-		
-		return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE).body(relatorio);
-=======
 	@PutMapping("/{codigo}")
-	public ResponseEntity<Lancamento> atualizar( @PathVariable Long codigo, Lancamento lancamento ) {
-		
+	public ResponseEntity<Lancamento> atualizar(@PathVariable Long codigo, Lancamento lancamento) {
+
 		try {
 			Lancamento lancamentoSalvo = lancamentoService.atualizar(codigo, lancamento);
 			return ResponseEntity.ok(lancamentoSalvo);
@@ -127,13 +104,35 @@ public class LancamentoResource {
 			return ResponseEntity.notFound().build();
 		}
 		
->>>>>>> 1cb358e469add51ff818381a5a6b5f51a72508c7
+	}
+	
+	@GetMapping("/estatisticas/pordia")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	public List<LancamentoEstatisticaDia> porDia() {
+		return lancamentoRepository.porDia(LocalDate.now());
+	}
+	
+	@GetMapping("/estatisticas/porcategoria")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	public List<LancamentoEstatisticaCategoria> porCategoria() {
+		 return lancamentoRepository.porCategoria(LocalDate.now());
+	}
+	
+	@GetMapping("/relatorios/porpessoa")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	public ResponseEntity<byte[]> relatorioPorPessoa(
+			@RequestParam @DateTimeFormat(pattern = "yyyyMMdd") LocalDate inicio,
+			@RequestParam @DateTimeFormat(pattern = "yyyyMMdd") LocalDate fim) throws JRException {
+
+		byte[] relatorio = lancamentoService.relatorioPorPessoa(inicio, fim);
+
+		return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE).body(relatorio);
 	}
 	
 	@ExceptionHandler(PessoaInexistenteOuInativaException.class)
 	public ResponseEntity<?> handlePessoaInexistenteOuInativaException(PessoaInexistenteOuInativaException ex) {
 		
-		String mensagemUsuario = messageSource.getMessage("pessoa.inativa-ou-inexistente", null, LocaleContextHolder.getLocale());
+		String mensagemUsuario = messageSource.getMessage("pessoa.inativaouinexistente", null, LocaleContextHolder.getLocale());
 		String mensagemDesenvolvedor = ex.toString();
 		List<Erro> erros =  Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 		
