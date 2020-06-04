@@ -35,7 +35,7 @@ public class Mailer {
 	@Autowired
 	private LancamentoRepository lancamentoRepository;
 	
-	@EventListener
+	/*@EventListener
 	public void teste( ApplicationReadyEvent event ) {
 		
 		String template = "mail/aviso-lancamentos-vencidos";
@@ -49,7 +49,7 @@ public class Mailer {
 		
 		System.out.println("Terminando envio de e-mail!");
 		
-	}
+	}*/
 	
 	public void enviarEmail( String remetente, List<String> destinatarios, String assunto, String template, Map<String, Object> variaveis) {
 		
