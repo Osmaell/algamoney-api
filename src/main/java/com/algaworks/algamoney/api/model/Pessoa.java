@@ -38,11 +38,11 @@ public class Pessoa {
 	@Embedded
 	private Endereco endereco;
 	
-	@Valid
 	@JsonIgnoreProperties("pessoa")
+	@Valid
 	@OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
 	private List<Contato> contatos;
-
+	
 	public Long getCodigo() {
 		return codigo;
 	}
