@@ -66,7 +66,11 @@ public class S3 {
 		}
 		
 	}
-
+	
+	public String configurarUrl(String objeto) {
+		return "\\\\" + property.getS3().getBucket() + ".s3.amazonaws.com/" + objeto;
+	}
+	
 	private String gerarNomeUnico(String originalFilename) {
 		return UUID.randomUUID().toString() + "_" + originalFilename;
 	}

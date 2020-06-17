@@ -1,9 +1,6 @@
 package com.algaworks.algamoney.api.resource;
 	
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -36,6 +33,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.algaworks.algamoney.api.config.storage.S3;
+import com.algaworks.algamoney.api.dto.Anexo;
 import com.algaworks.algamoney.api.dto.LancamentoEstatisticaCategoria;
 import com.algaworks.algamoney.api.dto.LancamentoEstatisticaDia;
 import com.algaworks.algamoney.api.event.RecursoCriadoEvent;
@@ -64,6 +63,9 @@ public class LancamentoResource {
 	
 	@Autowired
 	private MessageSource messageSource;
+
+	@Autowired
+	private S3 s3;
 	
 	@GetMapping
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
@@ -136,13 +138,10 @@ public class LancamentoResource {
 	
 	@PostMapping("/anexo")
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
-	public String uploadAnexo(@RequestParam  MultipartFile anexo) throws IOException {
-		
-		OutputStream out = new FileOutputStream("C:\\Users\\turing\\anexo--" + anexo.getOriginalFilename());
-		out.write(anexo.getBytes());
-		out.close();
-		
-		return "OK";
+	public Anexo uploadAnexo(@RequestParam  MultipartFile anexo) throws IOException {
+		String nome = s3.salvarTemporariamente(anexo);
+		System.out.println("NOME DO OBJETO: " + nome);
+		return new Anexo(nome, s3.configurarUrl(nome));
 	}
 	
 	@ExceptionHandler(PessoaInexistenteOuInativaException.class)
