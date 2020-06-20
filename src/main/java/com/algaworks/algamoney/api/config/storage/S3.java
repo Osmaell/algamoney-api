@@ -2,6 +2,7 @@ package com.algaworks.algamoney.api.config.storage;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.ObjectTagging;
 import com.amazonaws.services.s3.model.Permission;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.SetObjectTaggingRequest;
 import com.amazonaws.services.s3.model.Tag;
 
 @Component
@@ -31,19 +33,34 @@ public class S3 {
 	@Autowired
 	private AlgamoneyApiProperty property;
 	
+	public void salvar(String objeto) {
+		
+		SetObjectTaggingRequest setObjectTaggingRequest = new SetObjectTaggingRequest(
+				property.getS3().getBucket(), 
+				objeto,
+				new ObjectTagging(Collections.emptyList()));
+		
+		amazonS3.setObjectTagging(setObjectTaggingRequest);
+		
+	}
+	
 	public String salvarTemporariamente( MultipartFile arquivo ) {
 		
+		// Permissões
 		AccessControlList acl = new AccessControlList();
 		acl.grantPermission(GroupGrantee.AllUsers, Permission.Read);
 		
+		// Metadados
 		ObjectMetadata objectMetadata = new ObjectMetadata();
 		objectMetadata.setContentType( arquivo.getContentType() );
 		objectMetadata.setContentLength( arquivo.getSize() );
 		
+		// Identificador único
 		String nomeUnico = gerarNomeUnico( arquivo.getOriginalFilename() );
 		
 		try {
 			
+			// Criando um objeto de requisição para incluir o objeto (arquivo).
 			PutObjectRequest putObjectRequest = new PutObjectRequest(
 					property.getS3().getBucket(),
 					nomeUnico, 
@@ -53,7 +70,7 @@ public class S3 {
 			
 			putObjectRequest.setTagging(new ObjectTagging( Arrays.asList( new Tag("expirar", "true") ) ));
 			
-			// fazendo o upload do arquivo para o S3.
+			// fazendo o upload do objeto (arquivo) para o S3.
 			amazonS3.putObject(putObjectRequest);
 			
 			if (logger.isErrorEnabled()) {
@@ -62,7 +79,7 @@ public class S3 {
 			
 			return nomeUnico;
 		} catch (IOException e) {
-			throw new RuntimeException("Problema ao enviar o arquivo para o S3.", e);
+			throw new RuntimeException("Problemas ao enviar o arquivo para o S3.", e);
 		}
 		
 	}
@@ -74,5 +91,6 @@ public class S3 {
 	private String gerarNomeUnico(String originalFilename) {
 		return UUID.randomUUID().toString() + "_" + originalFilename;
 	}
+
 	
 }

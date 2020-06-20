@@ -36,7 +36,7 @@ public class S3Config {
 		
 		if (!amazonS3.doesBucketExistV2(property.getS3().getBucket())) {
 			amazonS3.createBucket(new CreateBucketRequest(property.getS3().getBucket()));
-		
+			
 			BucketLifecycleConfiguration.Rule regraExpiracao = 
 					new BucketLifecycleConfiguration.Rule()
 					.withId("Regra de expiração de arquivos temporários")

@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -46,6 +47,11 @@ public class Lancamento {
 	private BigDecimal valor;
 	
 	private String observacao;
+	
+	private String anexo;
+	
+	@Transient
+	private String urlAnexo;
 	
 	@NotNull
 	@Enumerated(EnumType.STRING)
@@ -108,6 +114,22 @@ public class Lancamento {
 
 	public void setObservacao(String observacao) {
 		this.observacao = observacao;
+	}
+
+	public String getAnexo() {
+		return anexo;
+	}
+
+	public void setAnexo(String anexo) {
+		this.anexo = anexo;
+	}
+
+	public String getUrlAnexo() {
+		return urlAnexo;
+	}
+
+	public void setUrlAnexo(String urlAnexo) {
+		this.urlAnexo = urlAnexo;
 	}
 
 	public TipoLancamento getTipo() {

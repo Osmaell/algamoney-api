@@ -14,7 +14,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import com.algaworks.algamoney.api.config.storage.S3;
 import com.algaworks.algamoney.api.dto.LancamentoEstatisticaPessoa;
 import com.algaworks.algamoney.api.mail.Mailer;
 import com.algaworks.algamoney.api.model.Lancamento;
@@ -50,11 +52,15 @@ public class LancamentoService {
 	@Autowired
 	private Mailer mailer;
 	
+	@Autowired
+	private S3 s3;
+	
 	public Lancamento salvar(Lancamento lancamento) {
 		
-		Pessoa pessoa = pessoaRepository.findOne(lancamento.getPessoa().getCodigo());
-		if (pessoa == null || pessoa.isInativo()) {
-			throw new PessoaInexistenteOuInativaException();
+		validarPessoa(lancamento);
+		
+		if (StringUtils.hasText(lancamento.getAnexo())) {
+			s3.salvar(lancamento.getAnexo());
 		}
 		
 		return lancamentoRepository.save(lancamento);
