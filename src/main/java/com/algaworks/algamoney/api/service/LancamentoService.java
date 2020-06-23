@@ -117,7 +117,13 @@ public class LancamentoService {
 	public Lancamento atualizar(Long codigo, Lancamento lancamento) {
 		
 		Lancamento lancamentoSalvo = buscarLancamentoExistente(codigo);
+		
+		System.out.println("LANCAMENTO >>>\t\t" + lancamento.getAnexo());
+		System.out.println("PESSOA >>>\t\t" + lancamento.getPessoa());
+		System.out.println("ANEXO >>>\t\t" +lancamento.getAnexo());
+		
 		if (!lancamento.getPessoa().equals(lancamentoSalvo.getPessoa())) {
+			System.out.println("PASSEI AQUI!!!");
 			validarPessoa(lancamento);
 		}
 		
