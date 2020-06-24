@@ -26,7 +26,7 @@ import com.amazonaws.services.s3.model.Tag;
 
 @Component
 public class S3 {
-
+	
 	private static final Logger logger = LoggerFactory.getLogger(S3.class);
 
 	@Autowired
@@ -43,6 +43,21 @@ public class S3 {
 				new ObjectTagging(Collections.emptyList()));
 		
 		amazonS3.setObjectTagging(setObjectTaggingRequest);
+		
+	}
+	
+	public void remover(String objeto) {
+		DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(property.getS3().getBucket(), objeto);
+		amazonS3.deleteObject(deleteObjectRequest);
+	}
+	
+	public void substituir(String objetoAntigo, String objetoNovo) {
+		
+		if ( StringUtils.hasText(objetoAntigo) ) {
+			this.remover(objetoAntigo);
+		}
+		
+		this.salvar(objetoNovo);
 		
 	}
 	
@@ -93,5 +108,7 @@ public class S3 {
 	private String gerarNomeUnico(String originalFilename) {
 		return UUID.randomUUID().toString() + "_" + originalFilename;
 	}
+
+
 	
 }

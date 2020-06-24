@@ -118,20 +118,21 @@ public class LancamentoService {
 		
 		Lancamento lancamentoSalvo = buscarLancamentoExistente(codigo);
 		
-		System.out.println("LANCAMENTO >>>\t\t" + lancamento.getAnexo());
-		System.out.println("PESSOA >>>\t\t" + lancamento.getPessoa());
-		System.out.println("ANEXO >>>\t\t" +lancamento.getAnexo());
-		
 		if (!lancamento.getPessoa().equals(lancamentoSalvo.getPessoa())) {
-			System.out.println("PASSEI AQUI!!!");
 			validarPessoa(lancamento);
+		}
+		
+		if ( StringUtils.isEmpty( lancamento.getAnexo() ) && StringUtils.hasText( lancamentoSalvo.getAnexo() ) ) {
+			s3.remover(lancamentoSalvo.getAnexo());
+		} else if ( StringUtils.hasText( lancamento.getAnexo() ) && !lancamento.getAnexo().equals(lancamentoSalvo.getAnexo()) ) {
+			s3.substituir(lancamentoSalvo.getAnexo(), lancamento.getAnexo());
 		}
 		
 		BeanUtils.copyProperties(lancamento, lancamentoSalvo, "codigo");
 		
 		return lancamentoRepository.save(lancamentoSalvo);
 	}
-
+	
 	private void validarPessoa(Lancamento lancamento) {
 		
 		Pessoa pessoa = null;
